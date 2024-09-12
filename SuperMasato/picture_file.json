@@ -2,6 +2,8 @@
   "files": {
     "black": "./img/black.png",
     "back": "./img/back.png",
-    "stage0": "./img/stage0.png"
+    "stage0": "./img/stage0.png",
+    "title": "./img/title.png",
+    "gameover": "./img/gameover.png"
   }
 }

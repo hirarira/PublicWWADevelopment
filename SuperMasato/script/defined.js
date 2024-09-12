@@ -31,37 +31,42 @@ function CALL_MOVE() {
 
 /** 右キーを押したときに呼ばれる関数 */
 function CALL_PUSH_RIGHT() {
-  if(TIME > v["accept_key_next_frame"]) {
-    v["accept_key_next_frame"] += 10;
-    movePlayerRight();
+  if(v["game_mode"] == "play") {
+    if(TIME > v["accept_key_next_frame"]) {
+      v["accept_key_next_frame"] += 10;
+      movePlayerRight();
+    }
   }
 }
 
 /** 左キーを押したときに呼ばれる関数 */
 function CALL_PUSH_LEFT() {
-  if(TIME > v["accept_key_next_frame"]) {
-    v["accept_key_next_frame"] += 10;
-    movePlayerLeft();
+  if(v["game_mode"] == "play") {
+    if(TIME > v["accept_key_next_frame"]) {
+      v["accept_key_next_frame"] += 10;
+      movePlayerLeft();
+    }
   }
 }
 
 function CALL_PUSH_DOWN() {
-  if(TIME > v["accept_key_next_frame"]) {
-  }
 }
 
 function CALL_PUSH_UP() {
-  if(TIME > v["accept_key_next_frame"]) {
-  }
 }
 
 function COMMON_INPUT_KEY() {
   if(TIME > v["accept_key_next_frame"]) {
     v["accept_key_next_frame"] += 10;
-    if(v["tmp_input_key"] == "A") {
-      jumpPlayer();
-    }if(v["tmp_input_key"] == "Z") {
-      randomJumpPlayer();
+    if(v["game_mode"] == "play") {
+      if(v["tmp_input_key"] == "A") {
+        jumpPlayer();
+      }
+    }
+    if(v["game_mode"] == "title" || v["game_mode"] == "gameover") {
+      if(v["tmp_input_key"] == "A") {
+        startGame();
+      }
     }
   }
 }

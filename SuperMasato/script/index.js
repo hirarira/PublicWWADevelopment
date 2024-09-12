@@ -1,29 +1,53 @@
 function initGame() {
+  v["game_mode"] = "loading";
   v["accept_key_next_frame"] = 0;
   v["next_picture_frame"] = 0;
   v["BLOCK_SIZE"] = 40;
   v["MASATO_CENTER_X"] = 200;
   DEL_PLAYER(1);
   restart();
+  v["game_mode"] = "title";
 }
 
 function frame() {
-  /** 真下にブロックが無い場合もあるので落下中にしとく */
-  v["player_is_jump"] = true;
-  // 当たり判定
-  atariJudge();
-  /** プレイヤーを動かす */
-  moverPlayer();
-  /** 色々描画する */
-  pictureFrame();
-  /** タイムを減らす */
-  if(v["next_time_frame"] < TIME) {
-    v["next_time_frame"] = TIME + 100;
-    DF -= 1;
-    /** タイムオーバー */
-    if(DF <= 0) {
-      miss();
+  if(v["game_mode"] == "play") {
+    /** 真下にブロックが無い場合もあるので落下中にしとく */
+    v["player_is_jump"] = true;
+    // 当たり判定
+    atariJudge();
+    /** プレイヤーを動かす */
+    moverPlayer();
+    /** 色々描画する */
+    pictureFrame();
+    /** タイムを減らす */
+    if(v["next_time_frame"] < TIME) {
+      v["next_time_frame"] = TIME + 100;
+      DF -= 1;
+      /** タイムオーバー */
+      if(DF <= 0) {
+        miss();
+      }
     }
+  }
+  /** タイトル画面 */
+  else if(v["game_mode"] == "title") {
+    /** タイトル画面 */
+    PICTURE(1, {
+      pos: [0, 0],
+      imgFile: "title",
+      size: [440, 440],
+      opacity: 100
+    });
+  }
+  /** gameover画面 */
+  else if(v["game_mode"] == "gameover") {
+    /** gameover画面 */
+    PICTURE(1000, {
+      pos: [0, 0],
+      imgFile: "gameover",
+      size: [440, 440],
+      opacity: 100
+    });
   }
 }
 
@@ -38,10 +62,24 @@ function restart() {
   DF = 1000;
 }
 
-function miss() {
-  HP -= 1;
-  SOUND(17);
+/** ゲーム開始 */
+function startGame() {
+  HP = 5;
+  GD = 0;
   restart();
+  PICTURE(1000);
+  v["game_mode"] = "play";
+}
+
+function miss() {
+  if(HP <= 0) {
+    v["game_mode"] = "gameover";
+  }
+  else {
+    HP -= 1;
+    SOUND(17);
+    restart();
+  }
 }
 
 function moverPlayer() {
@@ -273,14 +311,6 @@ function jumpPlayer() {
     v["player_vy"] = -8;
     v["player_is_jump"] = true;
     SOUND(12);
-  }
-}
-
-/** ランダムジャンプ */
-function randomJumpPlayer() {
-  if(!v["player_is_jump"]) {
-    v["player_vy"] = -1 * RAND(12);
-    v["player_is_jump"] = true;
   }
 }
 
