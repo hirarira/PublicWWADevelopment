@@ -1,3 +1,4 @@
+/** 初期画面 */
 function initGame() {
   v["game_mode"] = "loading";
   v["accept_key_next_frame"] = 0;
@@ -5,10 +6,10 @@ function initGame() {
   v["BLOCK_SIZE"] = 40;
   v["MASATO_CENTER_X"] = 200;
   DEL_PLAYER(1);
-  restart();
   v["game_mode"] = "title";
 }
 
+/** 1フレームごとに処理が呼ばれる */
 function frame() {
   if(v["game_mode"] == "play") {
     /** 真下にブロックが無い場合もあるので落下中にしとく */
@@ -66,11 +67,31 @@ function restart() {
 function startGame() {
   HP = 5;
   GD = 0;
+  v["item"] = [];
+  loadItem();
   restart();
   PICTURE(1000);
   v["game_mode"] = "play";
 }
 
+/** アイテム・敵キャラを読み込む */
+function loadItem() {
+  for(i=0; i<100; i++) {
+    for(j=0; j<11; j++) {
+      if(o[i][j] != 0) {
+        v["tmp_idx"] = LENGTH(v["item"]);
+        v["item"][v["tmp_idx"]] = {
+          id: o[i][j],
+          x: i*40,
+          y: j*40,
+          exist: true
+        }
+      }
+    }
+  }
+}
+
+/** ミスした時 */
 function miss() {
   if(HP <= 0) {
     v["game_mode"] = "gameover";
@@ -139,21 +160,26 @@ function atariJudge() {
         if(v["tmp_map_id"] == 2) {
           atariJudgeBlock();
         }
-        /** Object判定 */
-        v["tmp_obj_id"] = o[i][j];
-        if(v["tmp_obj_id"] != 0) {
-          atariJudgeObject();
-        }
       }
+    }
+  }
+  // アイテム当たり判定
+  for(i=0; i<LENGTH(v["item"]); i++) {
+    v["tmp_obj_id"] = v["item"][i]["id"];
+    v["tmp_x"] = v["item"][i]["x"];
+    v["tmp_y"] = v["item"][i]["y"];
+    if(v["item"][i]["exist"]) {
+      atariJudgeObject();
     }
   }
 }
 
 /**
- * 1ブロックの当たり判定 (object)
+ * 1ブロックの当たり判定
  * v["tmp_x"]: ブロックX座標（左上）
  * v["tmp_y"]: ブロックY座標（左上）
  * v["tmp_obj_id"]: あたったObjectのID
+ * i: アイテム配列・敵配列のIndex番号
  **/
 function atariJudgeObject() {
   if(
@@ -171,14 +197,14 @@ function atariJudgeObject() {
     /** チェリーゲット */
     if(v["tmp_obj_id"] == 4) {
       GD += 1;
-      o[i][j] = 0;
       SOUND(14);
+      v["item"][i]["exist"] = false;
     }
     /** Suicaゲット */
     if(v["tmp_obj_id"] == 5) {
       GD += 10;
-      o[i][j] = 0;
       SOUND(14);
+      v["item"][i]["exist"] = false;
     }
   }
 }
@@ -261,28 +287,31 @@ function pictureBackground() {
 /** アイテムを描画する */
 function pictureItem() {
   v[0] = v["player_x"] / 40;
-  for(i=0; i<12; i++) {
-    for(j=0; j<12; j++) {
-      v["tmp_x"] = v[0] - 5 + i;
-      v["tmp_y"] = j;
-      if(v["tmp_x"] > 0 && v["tmp_y"] > 0 && v["tmp_x"] <= 100 && v["tmp_y"] <= 100) {
-        v["tmp_obj_id"] = o[v["tmp_x"]][v["tmp_y"]];
-        v["tmp_idx"] = 100 + (i * 12) + j;
-        v["tmp_img_x"] = GET_IMG_POS_X(v["tmp_obj_id"], 0);
-        v["tmp_img_y"] = GET_IMG_POS_Y(v["tmp_obj_id"], 0);
-        if(v["tmp_obj_id"] == 4 || v["tmp_obj_id"] == 5) {
-          v["tmp_pic_x"] = (v["tmp_x"] * 40) - v["player_x"] + v["MASATO_CENTER_X"];
-          v["tmp_pic_y"] = v["tmp_y"] * 40;
-          PICTURE(v["tmp_idx"], {
-            pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
-            img: [v["tmp_img_x"], v["tmp_img_y"]],
-            size: [40, 40]
-          });
-        }
-        else {
-          PICTURE(v["tmp_idx"]);
-        }
+  for(i=0; i<LENGTH(v["item"]); i++) {
+    /** アイテム描画は100番代からスタートする */
+    v["tmp_idx"] = 100 + i;
+    if(
+      v["item"][i]["x"] > 0 &&
+      v["item"][i]["y"] > 0 &&
+      v["item"][i]["x"] <= (100 * v["BLOCK_SIZE"]) &&
+      v["item"][i]["y"] <= (100 * v["BLOCK_SIZE"]) &&
+      v["item"][i]["exist"]
+    ) {
+      v["tmp_img_x"] = GET_IMG_POS_X(v["item"][i]["id"], 0);
+      v["tmp_img_y"] = GET_IMG_POS_Y(v["item"][i]["id"], 0);
+      if(v["item"][i]["id"] == 4 || v["item"][i]["id"] == 5) {
+        v["tmp_pic_x"] = v["item"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
+        v["tmp_pic_y"] = v["item"][i]["y"];
+        PICTURE(v["tmp_idx"], {
+          pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+          img: [v["tmp_img_x"], v["tmp_img_y"]],
+          size: [40, 40]
+        });
       }
+    }
+    /** 存在しないアイテムは削除する */
+    else {
+      PICTURE(v["tmp_idx"]);
     }
   }
 }
