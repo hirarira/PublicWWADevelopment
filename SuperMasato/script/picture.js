@@ -44,11 +44,22 @@ function pictureItem() {
       v["tmp_img_y"] = GET_IMG_POS_Y(v["item"][i]["id"], 0);
       v["tmp_pic_x"] = v["item"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
       v["tmp_pic_y"] = v["item"][i]["y"];
-      PICTURE(v["tmp_idx"], {
-        pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
-        img: [v["tmp_img_x"], v["tmp_img_y"]],
-        size: [40, 40]
-      });
+      /** ピクチャ表示は画面内だったらする */
+      if(
+        v["tmp_pic_x"] > -40 &&
+        v["tmp_pic_x"] < 440 &&
+        v["tmp_pic_y"] > -40 &&
+        v["tmp_pic_y"] < 440
+      ) {
+        PICTURE(v["tmp_idx"], {
+          pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+          img: [v["tmp_img_x"], v["tmp_img_y"]],
+          size: [40, 40]
+        });
+      }
+      else {
+        PICTURE(v["tmp_idx"]);
+      }
     }
     /** 存在しないアイテムは削除する */
     else {
@@ -74,11 +85,22 @@ function pictureEnemy() {
       v["tmp_img_y"] = GET_IMG_POS_Y(v["enemy"][i]["id"], 0, TIME%2);
       v["tmp_pic_x"] = v["enemy"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
       v["tmp_pic_y"] = v["enemy"][i]["y"];
-      PICTURE(v["tmp_idx"], {
-        pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
-        img: [v["tmp_img_x"], v["tmp_img_y"]],
-        size: [40, 40]
-      });
+      /** ピクチャ表示は画面内だったらする */
+      if(
+        v["tmp_pic_x"] > -40 &&
+        v["tmp_pic_x"] < 440 &&
+        v["tmp_pic_y"] > -40 &&
+        v["tmp_pic_y"] < 440
+      ) {
+        PICTURE(v["tmp_idx"], {
+          pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+          img: [v["tmp_img_x"], v["tmp_img_y"]],
+          size: [40, 40]
+        });
+      }
+      else {
+        PICTURE(v["tmp_idx"]);
+      }
     }
     /** 存在しないアイテムは削除する */
     else {

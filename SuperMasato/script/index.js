@@ -18,6 +18,8 @@ function frame() {
     atariJudge();
     /** プレイヤーを動かす */
     moverPlayer();
+    /** 敵を動かす */
+    moveEnemy();
     /** 色々描画する */
     pictureFrame();
     /** タイムを減らす */
@@ -156,6 +158,35 @@ function moverPlayer() {
   }
   v["player_x"] *= 1;
   v["player_y"] *= 1;
+}
+
+/** 敵の動き */
+function moveEnemy() {
+  for(i=0; i<LENGTH(v["enemy"]); i++) {
+    if(v["enemy"][i]["exist"]) {
+      /** コウモリさん */
+      if(v["enemy"][i]["id"] == 7) {
+        v["enemy"][i]["x"] += (RAND(21) - 10);
+        v["enemy"][i]["y"] += (RAND(21) - 10);
+        /** 左には行けないようにする */
+        if(v["enemy"][i]["x"] < 0) {
+          v["enemy"][i]["x"] = 0;
+        }
+        /** 右には行けないようにする */
+        else if(v["enemy"][i]["x"] > 4000) {
+          v["enemy"][i]["x"] = 4000;
+        }
+        /** 上に行けないようにする */
+        if(v["enemy"][i]["y"] < 0) {
+          v["enemy"][i]["y"] = 0;
+        }
+        /** 下に行けないようにする */
+        if(v["enemy"][i]["y"] > 440) {
+          v["enemy"][i]["y"] = 440;
+        }
+      }
+    }
+  }
 }
 
 /** ジャンプする */
