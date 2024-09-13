@@ -68,6 +68,7 @@ function startGame() {
   HP = 5;
   GD = 0;
   v["item"] = [];
+  v["enemy"] = [];
   loadItem();
   restart();
   PICTURE(1000);
@@ -78,9 +79,20 @@ function startGame() {
 function loadItem() {
   for(i=0; i<100; i++) {
     for(j=0; j<11; j++) {
-      if(o[i][j] != 0) {
+      /** アイテムを読み込む */
+      if(o[i][j] == 4 || o[i][j] == 5) {
         v["tmp_idx"] = LENGTH(v["item"]);
         v["item"][v["tmp_idx"]] = {
+          id: o[i][j],
+          x: i*40,
+          y: j*40,
+          exist: true
+        }
+      }
+      /** 敵を読み込む */
+      if(o[i][j] == 6) {
+        v["tmp_idx"] = LENGTH(v["enemy"]);
+        v["enemy"][v["tmp_idx"]] = {
           id: o[i][j],
           x: i*40,
           y: j*40,
@@ -263,6 +275,7 @@ function pictureFrame() {
     v["next_picture_frame"] = TIME + 100;
     pictureBackground();
     pictureItem();
+    pictureEnemy();
   }
   picturePlayer();
 }
@@ -299,15 +312,43 @@ function pictureItem() {
     ) {
       v["tmp_img_x"] = GET_IMG_POS_X(v["item"][i]["id"], 0);
       v["tmp_img_y"] = GET_IMG_POS_Y(v["item"][i]["id"], 0);
-      if(v["item"][i]["id"] == 4 || v["item"][i]["id"] == 5) {
-        v["tmp_pic_x"] = v["item"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
-        v["tmp_pic_y"] = v["item"][i]["y"];
-        PICTURE(v["tmp_idx"], {
-          pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
-          img: [v["tmp_img_x"], v["tmp_img_y"]],
-          size: [40, 40]
-        });
-      }
+      v["tmp_pic_x"] = v["item"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
+      v["tmp_pic_y"] = v["item"][i]["y"];
+      PICTURE(v["tmp_idx"], {
+        pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+        img: [v["tmp_img_x"], v["tmp_img_y"]],
+        size: [40, 40]
+      });
+    }
+    /** 存在しないアイテムは削除する */
+    else {
+      PICTURE(v["tmp_idx"]);
+    }
+  }
+}
+
+/** 敵の描画をする */
+function pictureEnemy() {
+  v[0] = v["player_x"] / 40;
+  for(i=0; i<LENGTH(v["enemy"]); i++) {
+    /** 敵描画は200番代からスタートする */
+    v["tmp_idx"] = 200 + i;
+    if(
+      v["enemy"][i]["x"] > 0 &&
+      v["enemy"][i]["y"] > 0 &&
+      v["enemy"][i]["x"] <= (100 * v["BLOCK_SIZE"]) &&
+      v["enemy"][i]["y"] <= (100 * v["BLOCK_SIZE"]) &&
+      v["enemy"][i]["exist"]
+    ) {
+      v["tmp_img_x"] = GET_IMG_POS_X(v["enemy"][i]["id"], 0, TIME%2);
+      v["tmp_img_y"] = GET_IMG_POS_Y(v["enemy"][i]["id"], 0, TIME%2);
+      v["tmp_pic_x"] = v["enemy"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
+      v["tmp_pic_y"] = v["enemy"][i]["y"];
+      PICTURE(v["tmp_idx"], {
+        pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+        img: [v["tmp_img_x"], v["tmp_img_y"]],
+        size: [40, 40]
+      });
     }
     /** 存在しないアイテムは削除する */
     else {
