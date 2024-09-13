@@ -25,6 +25,15 @@ function atariJudge() {
       atariJudgeObject();
     }
   }
+  // 敵当たり判定
+  for(i=0; i<LENGTH(v["enemy"]); i++) {
+    v["tmp_obj_id"] = v["enemy"][i]["id"];
+    v["tmp_x"] = v["enemy"][i]["x"];
+    v["tmp_y"] = v["enemy"][i]["y"];
+    if(v["enemy"][i]["exist"]) {
+      atariJudgeObject();
+    }
+  }
 }
 
 /**
@@ -59,6 +68,49 @@ function atariJudgeObject() {
       SOUND(14);
       v["item"][i]["exist"] = false;
     }
+    /** 敵 */
+    if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7) {
+      /** 当たり判定の方向を取得する */
+      getAtariDirection();
+      /** 上からのみ倒せる */
+      if(v["tmp_direction"] == 8) {
+        GD += 1;
+        SOUND(14);
+        v["player_vy"] = -5;
+        v["enemy"][i]["exist"] = false;
+      }
+      /** その他の方角だとミスになる */
+      else {
+        miss();
+      }
+    }
+  }
+}
+
+/**
+ * 当たり方向を判定する
+ **/
+function getAtariDirection() {
+  /** 左右衝突 */
+  if(ABS(v["tmp_dx"]) > ABS(v["tmp_dy"])) {
+    /** 右から */
+    if(v["tmp_dx"] > 0) {
+      v["tmp_direction"] = 6;
+    }
+    /** 左から */
+    else {
+      v["tmp_direction"] = 4;
+    }
+  }
+  else {
+    /** 下から */
+    if(v["tmp_dy"] > 0) {
+      v["tmp_direction"] = 2;
+    }
+    /** 上から */
+    else {
+      v["tmp_direction"] = 8;
+    }
   }
 }
 
@@ -78,34 +130,30 @@ function atariJudgeBlock() {
     v["tmp_player_center_y"] = v["player_y"] + v["BLOCK_SIZE"] / 2;
     v["tmp_block_center_x"] = v["tmp_x"] + v["BLOCK_SIZE"] / 2;
     v["tmp_block_center_y"] = v["tmp_y"] + v["BLOCK_SIZE"] / 2;
-    v["tmp_dx"] = v["tmp_player_center_x"] - v["tmp_block_center_x"]
-    v["tmp_dy"] = v["tmp_player_center_y"] - v["tmp_block_center_y"]
-    
-    /** 左右衝突 */
-    if(ABS(v["tmp_dx"]) > ABS(v["tmp_dy"])) {
-      /** 右から */
-      if(v["tmp_dx"] > 0) {
-        v["player_x"] = v["tmp_x"] + v["BLOCK_SIZE"];
-        v["player_vx"] = 0;
-      }
-      /** 左から */
-      else {
-        v["player_x"] = v["tmp_x"] - v["BLOCK_SIZE"];
-        v["player_vx"] = 0;
-      }
+    v["tmp_dx"] = v["tmp_player_center_x"] - v["tmp_block_center_x"];
+    v["tmp_dy"] = v["tmp_player_center_y"] - v["tmp_block_center_y"];
+    /** 当たり判定の方向を取得する */
+    getAtariDirection();
+    /** 下から */
+    if(v["tmp_direction"] == 2) {
+      v["player_y"] = v["tmp_y"] + v["BLOCK_SIZE"];
+      v["player_vy"] = 0;
     }
-    else {
-      /** 下から */
-      if(v["tmp_dy"] > 0) {
-        v["player_y"] = v["tmp_y"] + v["BLOCK_SIZE"];
-        v["player_vy"] = 0;
-      }
-      /** 上から */
-      else {
-        v["player_y"] = v["tmp_y"] - v["BLOCK_SIZE"];
-        v["player_vy"] = 0;
-        v["player_is_jump"] = false;
-      }
+    /** 上から */
+    else if(v["tmp_direction"] == 8) {
+      v["player_y"] = v["tmp_y"] - v["BLOCK_SIZE"];
+      v["player_vy"] = 0;
+      v["player_is_jump"] = false;
+    }
+    /** 右から */
+    else if(v["tmp_direction"] == 6) {
+      v["player_x"] = v["tmp_x"] + v["BLOCK_SIZE"];
+      v["player_vx"] = 0;
+    }
+    /** 左から */
+    else if(v["tmp_direction"] == 4) {
+      v["player_x"] = v["tmp_x"] - v["BLOCK_SIZE"];
+      v["player_vx"] = 0;
     }
   }
 }

@@ -90,7 +90,7 @@ function loadItem() {
         }
       }
       /** 敵を読み込む */
-      if(o[i][j] == 6) {
+      if(o[i][j] == 6 || o[i][j] == 7) {
         v["tmp_idx"] = LENGTH(v["enemy"]);
         v["enemy"][v["tmp_idx"]] = {
           id: o[i][j],
