@@ -69,7 +69,7 @@ function atariJudgeObject() {
       v["item"][i]["exist"] = false;
     }
     /** 敵 */
-    if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7) {
+    if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7 || v["tmp_obj_id"] == 8) {
       /** 当たり判定の方向を取得する */
       getAtariDirection();
       /** 上からのみ倒せる */

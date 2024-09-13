@@ -92,12 +92,20 @@ function loadItem() {
         }
       }
       /** 敵を読み込む */
-      if(o[i][j] == 6 || o[i][j] == 7) {
+      if(o[i][j] == 6 || o[i][j] == 7 || o[i][j] == 8) {
         v["tmp_idx"] = LENGTH(v["enemy"]);
+        v["tmp_direction"] = 0;
+        /** コウモリの場合初期だと上に動く */
+        if(o[i][j] == 7) {
+          v["tmp_direction"] = 8;
+        }
         v["enemy"][v["tmp_idx"]] = {
           id: o[i][j],
           x: i*40,
           y: j*40,
+          baseX: i*40,
+          baseY: j*40,
+          direction: v["tmp_direction"],
           exist: true
         }
       }
@@ -166,24 +174,43 @@ function moveEnemy() {
     if(v["enemy"][i]["exist"]) {
       /** コウモリさん */
       if(v["enemy"][i]["id"] == 7) {
+        /** 上に動くモード */
+        if(v["enemy"][i]["direction"] == 8) {
+          v["enemy"][i]["y"] -= 2;
+        }
+        /** 下に動くモード */
+        else if(v["enemy"][i]["direction"] == 2) {
+          v["enemy"][i]["y"] += 2;
+        }
+        /** 規定位置より160px移動したら下に動く */
+        if(v["enemy"][i]["baseY"] - v["enemy"][i]["y"] > 160) {
+          v["enemy"][i]["direction"] = 2;
+        }
+        /** 規定位置まで下ったら上に動く */
+        if(v["enemy"][i]["baseY"] - v["enemy"][i]["y"] < 0) {
+          v["enemy"][i]["direction"] = 8;
+        }
+      }
+      /** ハッチ */
+      if(v["enemy"][i]["id"] == 8) {
         v["enemy"][i]["x"] += (RAND(21) - 10);
         v["enemy"][i]["y"] += (RAND(21) - 10);
-        /** 左には行けないようにする */
-        if(v["enemy"][i]["x"] < 0) {
-          v["enemy"][i]["x"] = 0;
-        }
-        /** 右には行けないようにする */
-        else if(v["enemy"][i]["x"] > 4000) {
-          v["enemy"][i]["x"] = 4000;
-        }
-        /** 上に行けないようにする */
-        if(v["enemy"][i]["y"] < 0) {
-          v["enemy"][i]["y"] = 0;
-        }
-        /** 下に行けないようにする */
-        if(v["enemy"][i]["y"] > 440) {
-          v["enemy"][i]["y"] = 440;
-        }
+      }
+      /** 左には行けないようにする */
+      if(v["enemy"][i]["x"] < 0) {
+        v["enemy"][i]["x"] = 0;
+      }
+      /** 右には行けないようにする */
+      else if(v["enemy"][i]["x"] > 4000) {
+        v["enemy"][i]["x"] = 4000;
+      }
+      /** 上に行けないようにする */
+      if(v["enemy"][i]["y"] < 0) {
+        v["enemy"][i]["y"] = 0;
+      }
+      /** 下に行けないようにする */
+      if(v["enemy"][i]["y"] > 440) {
+        v["enemy"][i]["y"] = 440;
       }
     }
   }
