@@ -1,4 +1,6 @@
 [
   "./script/defined.js",
-  "./script/index.js"
+  "./script/index.js",
+  "./script/picture.js",
+  "./script/atari.js"
 ]
