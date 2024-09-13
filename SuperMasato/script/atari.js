@@ -75,7 +75,7 @@ function atariJudgeObject() {
       /** 上からのみ倒せる */
       if(v["tmp_direction"] == 8) {
         GD += 1;
-        SOUND(14);
+        SOUND(3);
         v["player_vy"] = -5;
         v["enemy"][i]["exist"] = false;
       }

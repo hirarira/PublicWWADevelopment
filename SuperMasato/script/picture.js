@@ -78,11 +78,8 @@ function pictureEnemy() {
       v["enemy"][i]["x"] > 0 &&
       v["enemy"][i]["y"] > 0 &&
       v["enemy"][i]["x"] <= (100 * v["BLOCK_SIZE"]) &&
-      v["enemy"][i]["y"] <= (100 * v["BLOCK_SIZE"]) &&
-      v["enemy"][i]["exist"]
+      v["enemy"][i]["y"] <= (100 * v["BLOCK_SIZE"])
     ) {
-      v["tmp_img_x"] = GET_IMG_POS_X(v["enemy"][i]["id"], 0, TIME%2);
-      v["tmp_img_y"] = GET_IMG_POS_Y(v["enemy"][i]["id"], 0, TIME%2);
       v["tmp_pic_x"] = v["enemy"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
       v["tmp_pic_y"] = v["enemy"][i]["y"];
       /** ピクチャ表示は画面内だったらする */
@@ -92,11 +89,26 @@ function pictureEnemy() {
         v["tmp_pic_y"] > -40 &&
         v["tmp_pic_y"] < 440
       ) {
-        PICTURE(v["tmp_idx"], {
-          pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
-          img: [v["tmp_img_x"], v["tmp_img_y"]],
-          size: [40, 40]
-        });
+        /** 生きていればそのまま描画する */
+        if(v["enemy"][i]["exist"]) {
+          v["tmp_img_x"] = GET_IMG_POS_X(v["enemy"][i]["id"], 0, TIME%2);
+          v["tmp_img_y"] = GET_IMG_POS_Y(v["enemy"][i]["id"], 0, TIME%2);
+          PICTURE(v["tmp_idx"], {
+            pos: [v["tmp_pic_x"], v["tmp_pic_y"]],
+            img: [v["tmp_img_x"], v["tmp_img_y"]],
+            size: [40, 40]
+          });
+        }
+        /** 死んでたら潰れた状態で描画する */
+        else {
+          v["tmp_img_x"] = GET_IMG_POS_X(v["enemy"][i]["id"], 0);
+          v["tmp_img_y"] = GET_IMG_POS_Y(v["enemy"][i]["id"], 0);
+          PICTURE(v["tmp_idx"], {
+            pos: [v["tmp_pic_x"], v["tmp_pic_y"] + 20],
+            img: [v["tmp_img_x"], v["tmp_img_y"]],
+            size: [40, 20]
+          });
+        }
       }
       else {
         PICTURE(v["tmp_idx"]);
