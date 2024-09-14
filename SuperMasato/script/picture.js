@@ -19,9 +19,16 @@ function pictureBackground() {
     opacity: 100
   });
   v["tmp_back_x"] = (v["player_x"] - v["MASATO_CENTER_X"]) * -1;
+  /** ステージによって背景が変わる */
+  if(v["stage"] == 0) {
+    v["backImage"] = "stage0";
+  }
+  else if(v["stage"] == 1) {
+    v["backImage"] = "stage1";
+  }
   PICTURE(2, {
     pos: [v["tmp_back_x"], 0],
-    imgFile: "stage0",
+    imgFile: v["backImage"],
     size: [4040, 440],
     opacity: 100
   });
@@ -76,9 +83,9 @@ function pictureEnemy() {
     v["tmp_idx"] = 200 + i;
     if(
       v["enemy"][i]["x"] > 0 &&
-      v["enemy"][i]["y"] > 0 &&
+      v["enemy"][i]["y"] > -1 * v["BLOCK_SIZE"] &&
       v["enemy"][i]["x"] <= (100 * v["BLOCK_SIZE"]) &&
-      v["enemy"][i]["y"] <= (100 * v["BLOCK_SIZE"])
+      v["enemy"][i]["y"] <= (11 * v["BLOCK_SIZE"])
     ) {
       v["tmp_pic_x"] = v["enemy"][i]["x"] - v["player_x"] + v["MASATO_CENTER_X"];
       v["tmp_pic_y"] = v["enemy"][i]["y"];

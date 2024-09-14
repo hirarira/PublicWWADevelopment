@@ -52,6 +52,10 @@ function frame() {
       opacity: 100
     });
   }
+  /** クリア画面 */
+  else if(v["game_mode"] == "clearStage") {
+    nextStage();
+  }
 }
 
 /** リスタートゲーム */
@@ -67,8 +71,23 @@ function restart() {
 
 /** ゲーム開始 */
 function startGame() {
-  HP = 5;
+  HP = 10;
   GD = 0;
+  v["stage"] = 0;
+  startStage();
+}
+
+/** 次のステージに進む */
+function nextStage() {
+  v["game_mode"] = "loading";
+  /** 残りのTIMEがスコアとしてプラスされる */
+  GD += (DF / 10);
+  v["stage"] += 1;
+  startStage();
+}
+
+/** ステージ開始 */
+function startStage() {
   v["item"] = [];
   v["enemy"] = [];
   loadItem();
@@ -80,14 +99,17 @@ function startGame() {
 /** アイテム・敵キャラを読み込む */
 function loadItem() {
   for(i=0; i<100; i++) {
-    for(j=0; j<11; j++) {
+    /** 面によって読み込み位置を変える */
+    v["tmp_base_y"] = v["stage"] * 20;
+    v["diff_y"] = v["tmp_base_y"] * v["BLOCK_SIZE"];
+    for(j=v["tmp_base_y"]; j<(v["tmp_base_y"]+11); j++) {
       /** アイテムを読み込む */
-      if(o[i][j] == 4 || o[i][j] == 5) {
+      if(o[i][j] == 4 || o[i][j] == 5 || o[i][j] == 9) {
         v["tmp_idx"] = LENGTH(v["item"]);
         v["item"][v["tmp_idx"]] = {
           id: o[i][j],
           x: i*40,
-          y: j*40,
+          y: j*40 - v["diff_y"],
           exist: true
         }
       }
@@ -102,9 +124,9 @@ function loadItem() {
         v["enemy"][v["tmp_idx"]] = {
           id: o[i][j],
           x: i*40,
-          y: j*40,
+          y: j*40 - v["diff_y"],
           baseX: i*40,
-          baseY: j*40,
+          baseY: j*40 - v["diff_y"],
           direction: v["tmp_direction"],
           exist: true
         }
@@ -193,8 +215,8 @@ function moveEnemy() {
       }
       /** ハッチ */
       if(v["enemy"][i]["id"] == 8) {
-        v["enemy"][i]["x"] += (RAND(21) - 10);
-        v["enemy"][i]["y"] += (RAND(21) - 10);
+        v["enemy"][i]["x"] += (RAND(11) - 5);
+        v["enemy"][i]["y"] += (RAND(11) - 5);
       }
       /** 左には行けないようにする */
       if(v["enemy"][i]["x"] < 0) {
@@ -205,12 +227,20 @@ function moveEnemy() {
         v["enemy"][i]["x"] = 4000;
       }
       /** 上に行けないようにする */
-      if(v["enemy"][i]["y"] < 0) {
-        v["enemy"][i]["y"] = 0;
+      if(v["enemy"][i]["y"] < -40) {
+        v["enemy"][i]["y"] = -40;
+        /** 上に移動中だったら反転させる */
+        if(v["enemy"][i]["direction"] == 8) {
+          v["enemy"][i]["direction"] = 2;
+        }
       }
       /** 下に行けないようにする */
       if(v["enemy"][i]["y"] > 440) {
         v["enemy"][i]["y"] = 440;
+        /** 下に移動中だったら反転させる */
+        if(v["enemy"][i]["direction"] == 2) {
+          v["enemy"][i]["direction"] = 8;
+        }
       }
     }
   }

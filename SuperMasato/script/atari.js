@@ -5,9 +5,11 @@ function atariJudge() {
   // Playerからみて周囲1マスの判定を行う
   for(i=v[0]-2; i<v[0]+2; i++) {
     for(j=v[1]-2; j<v[1]+2; j++) {
-      if(i >= 0 && j >= 0 && i <= 100 && j <= 100) {
+      if(i >= 0 && j >= 0 && i <= 100 && j <= 20) {
+        /** 面によって読み込み位置を変える */
+        v["tmp_base_y"] = v["stage"] * 20;
         /** 背景当たり判定 */
-        v["tmp_map_id"] = m[i][j];
+        v["tmp_map_id"] = m[i][j+v["tmp_base_y"]];
         v["tmp_x"] = i * 40;
         v["tmp_y"] = j * 40;
         if(v["tmp_map_id"] == 2) {
@@ -67,6 +69,11 @@ function atariJudgeObject() {
       GD += 10;
       SOUND(14);
       v["item"][i]["exist"] = false;
+    }
+    /** ハンバーガーで次の面に進む */
+    if(v["tmp_obj_id"] == 9) {
+      SOUND(15);
+      v["game_mode"] = "clearStage";
     }
     /** 敵 */
     if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7 || v["tmp_obj_id"] == 8) {

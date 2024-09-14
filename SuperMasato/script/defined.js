@@ -63,8 +63,12 @@ function COMMON_INPUT_KEY() {
         jumpPlayer();
       }
     }
-    if(v["game_mode"] == "title" || v["game_mode"] == "gameover") {
+    if(v["game_mode"] == "title") {
       if(v["tmp_input_key"] == "A") {
+        startGame();
+      }
+    }if(v["game_mode"] == "gameover") {
+      if(v["tmp_input_key"] == "S") {
         startGame();
       }
     }
