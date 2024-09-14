@@ -35,7 +35,7 @@ function frame() {
     }
   }
   /** タイトル画面 */
-  else if(v["game_mode"] == "title") {
+  if(v["game_mode"] == "title") {
     /** タイトル画面 */
     PICTURE(1000, {
       pos: [0, 0],
@@ -44,7 +44,7 @@ function frame() {
       opacity: 100
     });
     PICTURE(1001, {
-      pos: [150, 130],
+      pos: [150, 100],
       text: "STAGE " + (v["stage"] + 2),
       font: "36px sans-serif",
       color: [0, 0, 0]
@@ -60,9 +60,22 @@ function frame() {
       opacity: 100
     });
   }
-  /** クリア画面 */
-  else if(v["game_mode"] == "clearStage") {
-    nextStage();
+  /** ゲームクリア */
+  else if(v["game_mode"] == "gameClear") {
+    PICTURE(1000, {
+      pos: [0, 0],
+      imgFile: "clear",
+      size: [440, 440],
+      opacity: 100
+    });
+    v["score"] = (HP * 100) + (DF / 10) + GD;
+    PICTURE(1001, {
+      pos: [220, 140],
+      text: "SCORE: " + v["score"],
+      font: "36px sans-serif",
+      textAlign: "center",
+      color: [0, 0, 0]
+    });
   }
 }
 
@@ -79,7 +92,7 @@ function restart() {
 
 /** コンティニュー */
 function continueGame() {
-  HP = 5;
+  HP = 10;
   GD = 0;
   /** ステージはそのまま */
   startStage();
@@ -87,7 +100,7 @@ function continueGame() {
 
 /** ゲーム開始 */
 function startGame() {
-  HP = 5;
+  HP = 10;
   GD = 0;
   v["stage"] = 0;
   AT = 1;

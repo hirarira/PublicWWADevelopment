@@ -4,7 +4,9 @@
     "back": "./img/back.png",
     "stage0": "./img/stage0.png",
     "stage1": "./img/stage1.png",
+    "stage2": "./img/stage2.png",
     "title": "./img/title.png",
-    "gameover": "./img/gameover.png"
+    "gameover": "./img/gameover.png",
+    "clear": "./img/clear.png"
   }
 }

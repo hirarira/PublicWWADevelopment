@@ -76,9 +76,17 @@ function atariJudgeObject() {
     /** ハンバーガーで次の面に進む */
     if(v["tmp_obj_id"] == 9) {
       SOUND(15);
-      /** セーブOK */
-      SAVE(0);
-      v["game_mode"] = "title";
+      if(v["stage"] < 2) {
+        /** セーブOK */
+        SAVE(0);
+        v["game_mode"] = "title";
+      }
+      else {
+        /** 残りのTIMEがスコアとしてプラスされる */
+        GD += (DF / 10);
+        /** ゲームクリア */
+        v["game_mode"] = "gameClear";
+      }
     }
     /** 敵 */
     if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7 || v["tmp_obj_id"] == 8) {
