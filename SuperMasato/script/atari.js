@@ -1,39 +1,42 @@
 /** 当たり判定総合 */
 function atariJudge() {
-  v[0] = v["player_x"] / 40;
-  v[1] = v["player_y"] / 40;
-  // Playerからみて周囲1マスの判定を行う
-  for(i=v[0]-2; i<v[0]+2; i++) {
-    for(j=v[1]-2; j<v[1]+2; j++) {
-      if(i >= 0 && j >= 0 && i <= 100 && j <= 20) {
-        /** 面によって読み込み位置を変える */
-        v["tmp_base_y"] = v["stage"] * 20;
-        /** 背景当たり判定 */
-        v["tmp_map_id"] = m[i][j+v["tmp_base_y"]];
-        v["tmp_x"] = i * 40;
-        v["tmp_y"] = j * 40;
-        if(v["tmp_map_id"] == 2) {
-          atariJudgeBlock();
+  if(TIME > v["next_atari_frame"]) {
+    v["next_atari_frame"] = TIME + 10;
+    v[0] = v["player_x"] / 40;
+    v[1] = v["player_y"] / 40;
+    // Playerからみて周囲1マスの判定を行う
+    for(i=v[0]-2; i<v[0]+2; i++) {
+      for(j=v[1]-2; j<v[1]+2; j++) {
+        if(i >= 0 && j >= 0 && i <= 100 && j <= 20) {
+          /** 面によって読み込み位置を変える */
+          v["tmp_base_y"] = v["stage"] * 20;
+          /** 背景当たり判定 */
+          v["tmp_map_id"] = m[i][j+v["tmp_base_y"]];
+          v["tmp_x"] = i * 40;
+          v["tmp_y"] = j * 40;
+          if(v["tmp_map_id"] == 2) {
+            atariJudgeBlock();
+          }
         }
       }
     }
-  }
-  // アイテム当たり判定
-  for(i=0; i<LENGTH(v["item"]); i++) {
-    v["tmp_obj_id"] = v["item"][i]["id"];
-    v["tmp_x"] = v["item"][i]["x"];
-    v["tmp_y"] = v["item"][i]["y"];
-    if(v["item"][i]["exist"]) {
-      atariJudgeObject();
+    // アイテム当たり判定
+    for(i=0; i<LENGTH(v["item"]); i++) {
+      v["tmp_obj_id"] = v["item"][i]["id"];
+      v["tmp_x"] = v["item"][i]["x"];
+      v["tmp_y"] = v["item"][i]["y"];
+      if(v["item"][i]["exist"]) {
+        atariJudgeObject();
+      }
     }
-  }
-  // 敵当たり判定
-  for(i=0; i<LENGTH(v["enemy"]); i++) {
-    v["tmp_obj_id"] = v["enemy"][i]["id"];
-    v["tmp_x"] = v["enemy"][i]["x"];
-    v["tmp_y"] = v["enemy"][i]["y"];
-    if(v["enemy"][i]["exist"]) {
-      atariJudgeObject();
+    // 敵当たり判定
+    for(i=0; i<LENGTH(v["enemy"]); i++) {
+      v["tmp_obj_id"] = v["enemy"][i]["id"];
+      v["tmp_x"] = v["enemy"][i]["x"];
+      v["tmp_y"] = v["enemy"][i]["y"];
+      if(v["enemy"][i]["exist"]) {
+        atariJudgeObject();
+      }
     }
   }
 }
@@ -73,7 +76,9 @@ function atariJudgeObject() {
     /** ハンバーガーで次の面に進む */
     if(v["tmp_obj_id"] == 9) {
       SOUND(15);
-      v["game_mode"] = "clearStage";
+      /** セーブOK */
+      SAVE(0);
+      v["game_mode"] = "title";
     }
     /** 敵 */
     if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7 || v["tmp_obj_id"] == 8) {

@@ -1,3 +1,8 @@
+function clearPicture() {
+  for(i=0; i<1000; i++) {
+    PICTURE(i);
+  }
+}
 
 /** 画面の描画をする */
 function pictureFrame() {
@@ -25,6 +30,9 @@ function pictureBackground() {
   }
   else if(v["stage"] == 1) {
     v["backImage"] = "stage1";
+  }
+  else if(v["stage"] == 2) {
+    v["backImage"] = "stage2";
   }
   PICTURE(2, {
     pos: [v["tmp_back_x"], 0],

@@ -3,7 +3,7 @@
     "black": "./img/black.png",
     "back": "./img/back.png",
     "stage0": "./img/stage0.png",
-    "stage1": "./img/stage1_base.png",
+    "stage1": "./img/stage1.png",
     "title": "./img/title.png",
     "gameover": "./img/gameover.png"
   }

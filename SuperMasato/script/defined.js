@@ -65,11 +65,16 @@ function COMMON_INPUT_KEY() {
     }
     if(v["game_mode"] == "title") {
       if(v["tmp_input_key"] == "A") {
-        startGame();
+        nextStage();
       }
     }if(v["game_mode"] == "gameover") {
+      /** さいしょから */
       if(v["tmp_input_key"] == "S") {
         startGame();
+      }
+      /** コンティニュー */
+      if(v["tmp_input_key"] == "X") {
+        continueGame();
       }
     }
   }

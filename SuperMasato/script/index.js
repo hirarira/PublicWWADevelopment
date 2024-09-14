@@ -3,10 +3,12 @@ function initGame() {
   v["game_mode"] = "loading";
   v["accept_key_next_frame"] = 0;
   v["next_picture_frame"] = 0;
+  v["next_atari_frame"] = 0;
   v["BLOCK_SIZE"] = 40;
   v["MASATO_CENTER_X"] = 200;
   DEL_PLAYER(1);
   v["game_mode"] = "title";
+  v["stage"] = -1;
 }
 
 /** 1フレームごとに処理が呼ばれる */
@@ -35,11 +37,17 @@ function frame() {
   /** タイトル画面 */
   else if(v["game_mode"] == "title") {
     /** タイトル画面 */
-    PICTURE(1, {
+    PICTURE(1000, {
       pos: [0, 0],
       imgFile: "title",
       size: [440, 440],
       opacity: 100
+    });
+    PICTURE(1001, {
+      pos: [150, 130],
+      text: "STAGE " + (v["stage"] + 2),
+      font: "36px sans-serif",
+      color: [0, 0, 0]
     });
   }
   /** gameover画面 */
@@ -69,11 +77,20 @@ function restart() {
   DF = 1000;
 }
 
+/** コンティニュー */
+function continueGame() {
+  HP = 5;
+  GD = 0;
+  /** ステージはそのまま */
+  startStage();
+}
+
 /** ゲーム開始 */
 function startGame() {
-  HP = 10;
+  HP = 5;
   GD = 0;
   v["stage"] = 0;
+  AT = 1;
   startStage();
 }
 
@@ -83,6 +100,9 @@ function nextStage() {
   /** 残りのTIMEがスコアとしてプラスされる */
   GD += (DF / 10);
   v["stage"] += 1;
+  AT = v["stage"] + 1;
+  /** ピクチャを削除 */
+  clearPicture();
   startStage();
 }
 
@@ -93,7 +113,10 @@ function startStage() {
   loadItem();
   restart();
   PICTURE(1000);
+  PICTURE(1001);
   v["game_mode"] = "play";
+  /** プレイ中はセーブ禁止 */
+  SAVE(1);
 }
 
 /** アイテム・敵キャラを読み込む */
@@ -139,6 +162,7 @@ function loadItem() {
 function miss() {
   if(HP <= 0) {
     v["game_mode"] = "gameover";
+    SAVE(0);
   }
   else {
     HP -= 1;
