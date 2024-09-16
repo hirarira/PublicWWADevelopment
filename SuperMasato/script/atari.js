@@ -55,12 +55,6 @@ function atariJudgeObject() {
     v["player_y"] + v["BLOCK_SIZE"] > v["tmp_y"] &&
     v["player_y"] < v["tmp_y"] + v["BLOCK_SIZE"]
   ) {
-    v["tmp_player_center_x"] = v["player_x"] + v["BLOCK_SIZE"] / 2;
-    v["tmp_player_center_y"] = v["player_y"] + v["BLOCK_SIZE"] / 2;
-    v["tmp_block_center_x"] = v["tmp_x"] + v["BLOCK_SIZE"] / 2;
-    v["tmp_block_center_y"] = v["tmp_y"] + v["BLOCK_SIZE"] / 2;
-    v["tmp_dx"] = v["tmp_player_center_x"] - v["tmp_block_center_x"];
-    v["tmp_dy"] = v["tmp_player_center_y"] - v["tmp_block_center_y"];
     /** チェリーゲット */
     if(v["tmp_obj_id"] == 4) {
       GD += 1;
@@ -88,8 +82,30 @@ function atariJudgeObject() {
         v["game_mode"] = "gameClear";
       }
     }
+    /** 1UP */
+    if(v["tmp_obj_id"] == 10) {
+      HP += 1;
+      SOUND(15);
+      v["item"][i]["exist"] = false;
+    }
+    /** 中間ポイント */
+    if(v["tmp_obj_id"] == 11) {
+      SOUND(15);
+      /** 開始地点を更新 */
+      v["start_pos"] = {
+        "x": v["tmp_x"],
+        "y": v["tmp_y"]
+      }
+      v["item"][i]["exist"] = false;
+    }
     /** 敵 */
     if(v["tmp_obj_id"] == 6 || v["tmp_obj_id"] == 7 || v["tmp_obj_id"] == 8) {
+      v["tmp_player_center_x"] = v["player_x"] + v["BLOCK_SIZE"] / 2;
+      v["tmp_player_center_y"] = v["player_y"] + v["BLOCK_SIZE"] / 2;
+      v["tmp_block_center_x"] = v["tmp_x"] + v["BLOCK_SIZE"] / 2;
+      v["tmp_block_center_y"] = v["tmp_y"] + v["BLOCK_SIZE"] / 2;
+      v["tmp_dx"] = v["tmp_player_center_x"] - v["tmp_block_center_x"];
+      v["tmp_dy"] = v["tmp_player_center_y"] - v["tmp_block_center_y"];
       /** 当たり判定の方向を取得する */
       getAtariDirection();
       /** 上からのみ倒せる */

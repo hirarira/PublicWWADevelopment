@@ -7,8 +7,13 @@ function initGame() {
   v["BLOCK_SIZE"] = 40;
   v["MASATO_CENTER_X"] = 200;
   DEL_PLAYER(1);
-  v["game_mode"] = "title";
   v["stage"] = -1;
+  HP = 10;
+  v["game_mode"] = "title";
+  v["start_pos"] = {
+    "x": 200,
+    "y": 360
+  }
 }
 
 /** 1フレームごとに処理が呼ばれる */
@@ -81,8 +86,8 @@ function frame() {
 
 /** リスタートゲーム */
 function restart() {
-  v["player_x"] = v["MASATO_CENTER_X"];
-  v["player_y"] = 360;
+  v["player_x"] = v["start_pos"]["x"];
+  v["player_y"] = v["start_pos"]["y"];
   v["player_vx"] = 0;
   v["player_vy"] = 1;
   v["player_is_jump"] = true;
@@ -94,6 +99,11 @@ function restart() {
 function continueGame() {
   HP = 10;
   GD = 0;
+  /** 開始地点をリセット */
+  v["start_pos"] = {
+    "x": 200,
+    "y": 360
+  }
   /** ステージはそのまま */
   startStage();
 }
@@ -102,6 +112,11 @@ function continueGame() {
 function startGame() {
   HP = 10;
   GD = 0;
+  /** 開始地点をリセット */
+  v["start_pos"] = {
+    "x": 200,
+    "y": 360
+  }
   v["stage"] = 0;
   AT = 1;
   startStage();
@@ -114,6 +129,11 @@ function nextStage() {
   GD += (DF / 10);
   v["stage"] += 1;
   AT = v["stage"] + 1;
+  /** 開始地点をリセット */
+  v["start_pos"] = {
+    "x": 200,
+    "y": 360
+  }
   /** ピクチャを削除 */
   clearPicture();
   startStage();
@@ -140,7 +160,7 @@ function loadItem() {
     v["diff_y"] = v["tmp_base_y"] * v["BLOCK_SIZE"];
     for(j=v["tmp_base_y"]; j<(v["tmp_base_y"]+11); j++) {
       /** アイテムを読み込む */
-      if(o[i][j] == 4 || o[i][j] == 5 || o[i][j] == 9) {
+      if(o[i][j] == 4 || o[i][j] == 5 || o[i][j] == 9 || o[i][j] == 10 || o[i][j] == 11) {
         v["tmp_idx"] = LENGTH(v["item"]);
         v["item"][v["tmp_idx"]] = {
           id: o[i][j],
@@ -191,11 +211,11 @@ function moverPlayer() {
   }
   else {
     /** 地面に設置したときは抵抗を受ける */
-    if(v["player_vx"] > 0.5) {
-      v["player_vx"] -= 0.5;
+    if(v["player_vx"] > 0.6) {
+      v["player_vx"] -= 0.6;
     }
-    else if(v["player_vx"] < -0.5) {
-      v["player_vx"] += 0.5;
+    else if(v["player_vx"] < -0.6) {
+      v["player_vx"] += 0.6;
     }
     else {
       v["player_vx"] = 0;
