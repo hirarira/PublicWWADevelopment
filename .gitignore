@@ -1,3 +1,5 @@
 wwa-server.exe
 hidden-img/
 backup/
+node_modules/
+/**/*.Identifier
