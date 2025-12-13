@@ -1,0 +1,85 @@
+{
+  "Group": [
+    {
+      "Name": "グループ 0",
+      "Object": [],
+      "Map": []
+    }
+  ],
+  "ObjectLabelMemo": [],
+  "MapLabelMemo": [],
+  "DebugDiff": {
+    "IsValid": false,
+    "CharPositionX": -1,
+    "CharPositionY": -1,
+    "GameOverPositionX": -1,
+    "GameOverPositionY": -1,
+    "StatusEnergyMax": -1,
+    "StatusEnergy": -1,
+    "StatusStrength": -1,
+    "StatusDefence": -1,
+    "StatusGold": -1,
+    "InitialPartsList": [
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      },
+      {
+        "Id": 0,
+        "X": 0,
+        "Y": 0,
+        "Type": 0
+      }
+    ]
+  }
+}
